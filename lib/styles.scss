@@ -7,6 +7,11 @@ div.foods {
   width: 300px;
 }
 
+div.foods-xl {
+  font: 100% $font-stack;
+  width: 350px;
+}
+
 div.meal-tables {
   font: 100% $font-stack;
   width: 300px;
@@ -81,6 +86,11 @@ td, th {
 
 th {
   background-color: #dddddd;
+}
+
+td.delete-button {
+  border: none;
+    color: red;
 }
 
 span.killer {
