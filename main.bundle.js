@@ -48,9 +48,6 @@
 
 	__webpack_require__(1);
 	__webpack_require__(5);
-	__webpack_require__(10);
-	__webpack_require__(11);
-	__webpack_require__(12);
 	var $ = __webpack_require__(6);
 	var meal_events = __webpack_require__(13);
 	$(document).ready(function () {
@@ -92,7 +89,7 @@
 
 
 	// module
-	exports.push([module.id, "div.foods {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\ndiv.meal-tables {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\n.foods input {\n  width: 100%;\n  height: 22px;\n  border-style: solid;\n  border-width: 1.5px; }\n\nh1.foods {\n  font-size: 1.5em;\n  font-weight: 350; }\n\np.food {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 2px; }\n\np.submit-food {\n  font-size: .8em;\n  color: red;\n  margin-top: 2px;\n  text-align: right; }\n\n.button {\n  background-color: #56CCF2;\n  color: black;\n  border-style: solid;\n  border-width: 1.5px;\n  border-color: black;\n  border-radius: 25px;\n  margin-bottom: 15px;\n  padding: 1em 18px;\n  text-align: center;\n  cursor: pointer;\n  font-size: 1em;\n  font-weight: bold;\n  line-height: 1px; }\n\ntable {\n  font-family: arial, sans-serif;\n  border-collapse: collapse;\n  width: 100%; }\n\ntd, th {\n  border: 2px solid;\n  text-align: left;\n  padding: 8px; }\n\nth {\n  background-color: #dddddd; }\n\nspan.killer {\n  float: right;\n  margin-right: -2.4em;\n  color: red; }\n", ""]);
+	exports.push([module.id, "div.foods {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\ndiv.meal-tables {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\n.foods input {\n  width: 100%;\n  height: 22px;\n  border-style: solid;\n  border-width: 1.5px; }\n\nh1.foods {\n  font-size: 1.5em;\n  font-weight: 350; }\n\np.food {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 2px; }\n\np.submit-food {\n  font-size: .8em;\n  color: red;\n  margin-top: 2px;\n  text-align: right; }\n\np.return {\n  font-weight: bold;\n  color: #000; }\n\n.button {\n  background-color: #56CCF2;\n  color: black;\n  border-style: solid;\n  border-width: 1.5px;\n  border-color: black;\n  border-radius: 25px;\n  margin-bottom: 15px;\n  padding: 1em 18px;\n  text-align: center;\n  cursor: pointer;\n  font-size: 1em;\n  font-weight: bold;\n  line-height: 1px;\n  width: 140px; }\n\ntable {\n  font-family: arial, sans-serif;\n  border-collapse: collapse;\n  width: 100%; }\n\ntd, th {\n  border: 2px solid;\n  text-align: left;\n  padding: 8px; }\n\nth {\n  background-color: #dddddd; }\n\nspan.killer {\n  float: right;\n  margin-right: -2.4em;\n  color: red; }\n\n#food_form {\n  display: inline !important; }\n\n.fa-arrow-left {\n  margin-right: 4px;\n  color: #000; }\n\ndiv.column {\n  float: left;\n  width: 43%;\n  padding: 10px; }\n\ndiv.row:after {\n  content: \"\";\n  display: table;\n  clear: both; }\n\np.food-table-header {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 12px;\n  margin-top: 1px; }\n\n.add-to-meal-checkbox {\n  margin-right: 20px; }\n", ""]);
 
 	// exports
 
@@ -414,34 +411,59 @@
 	var $ = __webpack_require__(6);
 	var Food = __webpack_require__(7);
 	var Ajax = __webpack_require__(8);
+	var FoodHandler = __webpack_require__(12);
+
+	// event listener for adding food
 
 	$(document).ready(function () {
 	  $("#food_form").submit(function (event) {
 	    var name = $("input[name=name]").val();
 	    var calories = $("input[name=calories]").val();
-	    sessionStorage.clear();
-	    if (name.length === 0) {
-	      $("p#submit-food-name").append("Please enter a food name.");
-	      var k = $('p#submit-food-name').html();
-	      sessionStorage.setItem('k', k);
-	    } else if (calories.length === 0) {
-	      $("p#submit-calories").append("Please enter a calorie amount.");
-	      var l = $('p#submit-calories').html();
-	      sessionStorage.setItem('l', l);
-	    } else {
-	      Ajax.postFoods(name, calories);
-	      $('input').val('').removeAttr('checked').removeAttr('selected');
-	    }
+	    return FoodHandler.validateFoodInput(name, calories);
 	  });
 	});
 
-	if (sessionStorage.getItem('k')) {
-	  $('p#submit-food-name').html(sessionStorage.getItem('k'));
-	}
+	// event listener for deleting food
 
-	if (sessionStorage.getItem('l')) {
-	  $('p#submit-calories').html(sessionStorage.getItem('l'));
-	}
+	$("#food-list").click(function (event) {
+	  var objectId = event.target.parentElement.parentElement.dataset.id;
+	  var row = event.target.parentElement.parentElement.parentElement;
+	  Ajax.deleteFood(objectId, row);
+	});
+
+	// event listener for editing food
+
+	$("#food-list").focusout(function (event) {
+	  var input = event.target.textContent;
+	  var newFoodValue = event.target.textContent.replace(/\s/g, '-');
+	  var currentFoodValue = event.target.attributes[1].value;
+	  var objectId = event.target.attributes[0].value;
+	  FoodHandler.editFood(input, newFoodValue, currentFoodValue, objectId);
+	});
+
+	// event listener for listing all food
+
+	$(document).ready(function () {
+	  Food.allFoods().then(function (data) {
+	    return FoodHandler.populateFoodTable(data);
+	  });
+	});
+
+	// event listener for filtering food by name
+
+	$("#filterFood").keypress(function (event) {
+	  var input = void 0,
+	      filter = void 0,
+	      table = void 0,
+	      tr = void 0,
+	      td = void 0,
+	      i = void 0;
+	  input = document.getElementById("filterFood");
+	  filter = input.value.toUpperCase();
+	  table = document.getElementById("foodTable");
+	  tr = table.getElementsByTagName("tr");
+	  FoodHandler.filterFood(input, filter, table, tr, td, i);
+	});
 
 /***/ }),
 /* 6 */
@@ -10712,9 +10734,10 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	var $ = __webpack_require__(6);
 	var Ajax = __webpack_require__(8);
 	var HTMLHelper = __webpack_require__(9);
-	var $ = __webpack_require__(6);
+	var LocalStorage = __webpack_require__(10);
 
 	module.exports = function () {
 	  function Food(food) {
@@ -10733,7 +10756,33 @@
 	        var allFood = data.map(function (k, v) {
 	          return new Food(k);
 	        });
+	        return allFood;
+	      });
+	    }
+	  }, {
+	    key: 'allSortedFood',
+	    value: function allSortedFood(foodsTable) {
+	      Food.allFood().then(function (allFood) {
 	        Food.sort(allFood);
+	        LocalStorage.saveFoodData(allFood, foodsTable);
+	        return allFood;
+	      });
+	    }
+	  }, {
+	    key: 'sortedCaloriesFood',
+	    value: function sortedCaloriesFood(foodsTable) {
+	      Food.allFood().then(function (allFood) {
+	        Food.calorieSort(allFood);
+	        LocalStorage.saveFoodData(allFood, foodsTable);
+	        return allFood;
+	      });
+	    }
+	  }, {
+	    key: 'reverseSortCaloriesFood',
+	    value: function reverseSortCaloriesFood(foodsTable) {
+	      Food.allFood().then(function (allFood) {
+	        Food.reverseCalorieSort(allFood);
+	        LocalStorage.saveFoodData(allFood, foodsTable);
 	        return allFood;
 	      });
 	    }
@@ -10752,13 +10801,24 @@
 	      });
 	    }
 	  }, {
+	    key: 'calorieSort',
+	    value: function calorieSort(foods) {
+	      foods.sort(function (a, b) {
+	        return b.calories - a.calories;
+	      });
+	    }
+	  }, {
+	    key: 'reverseCalorieSort',
+	    value: function reverseCalorieSort(foods) {
+	      foods.sort(function (a, b) {
+	        return a.calories - b.calories;
+	      });
+	    }
+	  }, {
 	    key: 'allFoods',
 	    value: function allFoods() {
-	      return Ajax.getAllFoods().then(function (data) {
-	        var allFoods = data.map(function (ob) {
-	          return new Food(ob);
-	        });
-	        var byId = allFoods.slice(0);
+	      return Food.allFood().then(function (allFood) {
+	        var byId = allFood.slice(0);
 	        byId.sort(function (a, b) {
 	          return a.id - b.id;
 	        });
@@ -10884,12 +10944,12 @@
 	  }, {
 	    key: 'newTableDiv',
 	    value: function newTableDiv(data) {
-	      return '\n      <div class=\'' + data.name + ' meals-table\'>\n      <tr>\n        <table class=\'' + data.name + '-table meal-table\'>\n          <thead>\n            <p class=\'meal-table-title\'><strong>' + data.name + '</strong></p>\n              <tr>\n                <th class=\'meal-table-header\'>Name</th>\n                <th class=\'meal-table-header\'>Calories</th>\n                <th class=table-actions></th>\n              </tr>\n            </thead class=\'' + data.name + '-thead meal-table-head\'>\n          <tfoot class=\'' + data.name + '\'>\n          </tfoot>\n          <tbody class=\'' + data.name + '-tbody ' + data.id + ' meal-table-body\'>\n          </tbody>\n          <tfoot class=\'' + data.name + '-tfoot meal-table-footer\'\n          </tfoot>\n        </table>\n      </tr>\n    ';
+	      return '\n      <div class=\'' + data.name + ' meals-table\'>\n      <tr>\n        <table class=\'' + data.name + '-table meal-table\'>\n          <thead>\n            <p class=\'meal-table-title\'><strong>' + data.name + '</strong></p>\n              <tr>\n                <th class=\'meal-table-header\'>Name</th>\n                <th class=\'meal-table-header\'>Calories</th>\n              </tr>\n            </thead class=\'' + data.name + '-thead meal-table-head\'>\n          <tfoot class=\'' + data.name + '\'>\n          </tfoot>\n          <tbody class=\'' + data.name + '-tbody ' + data.id + ' meal-table-body\'>\n          </tbody>\n          <tfoot class=\'' + data.name + '-tfoot meal-table-footer\'\n          </tfoot>\n        </table>\n      </tr>\n    ';
 	    }
 	  }, {
 	    key: 'newTableRow',
 	    value: function newTableRow(meal, val) {
-	      return '\n      <tr class=\'table-row\'>\n        <td class=\'table-name ' + val['id'] + '\'>' + val['name'] + '</td>\n        <td class=\'' + meal.name + '-calories-row table-cal ' + val['id'] + '\'>' + val['calories'] + '</td>\n        <td class=\'delete-button\'><input type=\'image\' class=\'delete-food ' + val['id'] + ' meal ' + meal.id + '\' id=\'' + meal.name + '\' src=\'https://i.imgur.com/Ea2X1B0.png\'/ alt=\'delete button\'></td>\n      </tr>';
+	      return '\n      <tr class=\'table-row\'>\n        <td class=\'table-name ' + val['id'] + '\'>' + val['name'] + '</td>\n        <td class=\'' + meal.name + '-calories-row table-cal ' + val['id'] + '\'>\n          <span class=\'killer\'><i class=\'fa fa-minus-circle delete-button delete-food ' + val['id'] + ' meal ' + meal.id + '\' id=\'' + meal.name + '\' aria-hidden=\'true\' style=\'font-size:24px\'></i></span>\n          ' + val['calories'] + '\n        </td>\n      </tr>';
 	    }
 	  }, {
 	    key: 'totalMealCalories',
@@ -10907,223 +10967,12 @@
 
 	'use strict';
 
-	var $ = __webpack_require__(6);
-	var Ajax = __webpack_require__(8);
-
-	$("#food-list").focusout(function (e) {
-	  var newFoodValue = e.target.textContent.replace(/\s/g, '-');
-	  var currentFoodValue = e.target.attributes[1].value;
-	  var objectId = e.target.attributes[0].value;
-	  if (newFoodValue != currentFoodValue && e.target.attributes[2].value === "name") {
-	    var calories = e.target.nextElementSibling.textContent;
-	    var food = { food: {
-	        name: newFoodValue,
-	        calories: calories
-	      }
-	    };
-	    Ajax.updateFood(food, objectId);
-	  } else {
-	    var name = e.target.previousElementSibling.textContent;
-	    var _food = { food: {
-	        name: name,
-	        calories: newFoodValue
-	      }
-	    };
-	    Ajax.updateFood(_food, objectId);
-	  }
-	});
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var $ = __webpack_require__(6);
-	var Ajax = __webpack_require__(8);
-
-	$("#food-list").click(function (e) {
-	  var objectId = e.target.parentElement.parentElement.dataset.id;
-	  var row = e.target.parentElement.parentElement.parentElement;
-	  Ajax.deleteFood(objectId, row);
-	});
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var $ = __webpack_require__(6);
-	var Food = __webpack_require__(7);
-
-	$(document).ready(function () {
-	  Food.allFoods().then(function (data) {
-	    data.forEach(function (object) {
-	      $("tbody").prepend("<tr class=food item-" + object.id + "><td data-id=" + object.id + " name=" + object.name.replace(/\s/g, '-') + " data-type='name' class='display' contenteditable='true'>" + object.name + "</td><td data-id=" + object.id + " name=" + object.calories + " data-type='calories' class='display' contenteditable='true'><span class='killer'><i class='fa fa-minus-circle' aria-hidden='true' style='font-size:24px'></i></span>" + object.calories + "</td></tr>");
-	    });
-	  });
-	});
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var $ = __webpack_require__(6);
-	var $mealsTable = $('.meal-tables');
-	var $foodsTable = $('.food-meal-body');
-	var $foodForm = $('#food_form');
-	var $consumedCals = $('.calories-consumed-val');
-	var $mealSelectionButton = $('.add-to-meal-button');
-	var $totalRemainingCals = $('.total-remaining-calories-val');
-
-	var Meal = __webpack_require__(14);
-	var Food = __webpack_require__(7);
-	var HTMLRunner = __webpack_require__(16);
-	var Calories = __webpack_require__(17);
-	var LocalStorage = __webpack_require__(15);
-
-	$foodForm.hide();
-	Meal.allMeals().then(function (data) {
-	  LocalStorage.saveMealData(data, $mealsTable);
-	  $consumedCals.trigger('click');
-	});
-
-	Food.allFood().then(function (data) {
-	  LocalStorage.saveFoodData(data, $foodsTable);
-	});
-
-	$($mealsTable).on('click', function (event) {
-	  if (event.target.className.includes('delete')) {
-	    Meal.deleteMealFood(event.target, event.target.parentElement.parentElement).then(function (meal) {
-	      $consumedCals.trigger('click');
-	      HTMLRunner.eventCalTrigger(meal);
-	    });
-	  }
-	});
-	$($consumedCals).on('click', function (event) {
-	  Calories.updateCalories($consumedCals).then(function (data) {
-	    $totalRemainingCals.trigger('click');
-	  });
-	});
-
-	$($totalRemainingCals).on('click', function (event) {
-	  Calories.updateRemainingCalories($totalRemainingCals, $consumedCals.html());
-	});
-
-	$($mealsTable).on('click', '.meal-calories', function (event) {
-	  var meal = event.target.className.split('-')[0];
-	  var mealID = event.target.id;
-	  Calories.updateMealCalories($('.' + meal + '-calories'), mealID, meal).then(function (data) {
-	    HTMLRunner.eventRemainingTrigger(meal);
-	  });
-	});
-
-	$($mealsTable).on('click', '.meal-calories-remaining', function (event) {
-	  var meal = event.target.className.split('-')[0];
-	  var mealID = event.target.id;
-	  Calories.updateRemainingMealCalories($('.' + meal + '-remaining-calories'), mealID);
-	});
-
-	$($mealSelectionButton).on('click', function (event) {
-	  var foodIDs = [];
-	  var mealID = event.target.id;
-	  var meal = event.target.innerText;
-	  $('.food-meal-body input:checkbox:checked').map(function () {
-	    foodIDs.push($(this).attr("id").split(" ")[1]);
-	    $(this).prop('checked', false);
-	  });
-	  Meal.addFoodToMeal(mealID, foodIDs).then(function (data) {
-	    HTMLRunner.eventCalTrigger(meal);
-	  });
-	});
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Ajax = __webpack_require__(8);
-	var Food = __webpack_require__(7);
-	var LocalStorage = __webpack_require__(15);
-
-	module.exports = function () {
-	  function Meal(meal) {
-	    _classCallCheck(this, Meal);
-
-	    this.id = meal.id;
-	    this.name = meal.name;
-	    this.food = Food.getFood(meal.foods);
-	  }
-
-	  _createClass(Meal, null, [{
-	    key: 'addFoodToMeal',
-	    value: function addFoodToMeal(mealID, foodIDs) {
-	      return Promise.all(foodIDs.map(function (foodID) {
-	        Ajax.addFoodToMeal(mealID, foodID);
-	      })).then(function (data) {
-	        LocalStorage.addFoodToMeal(mealID, foodIDs);
-	      });
-	    }
-	  }, {
-	    key: 'allMeals',
-	    value: function allMeals() {
-	      return Ajax.getAllMeals().then(function (data) {
-	        var allMeals = data.map(function (k, v) {
-	          return new Meal(k);
-	        });
-	        Meal.sort(allMeals);
-	        return allMeals;
-	      });
-	    }
-	  }, {
-	    key: 'sort',
-	    value: function sort(meals) {
-	      meals.sort(function (a, b) {
-	        b.id - a.id;
-	      });
-	    }
-	  }, {
-	    key: 'deleteMealFood',
-	    value: function deleteMealFood(target, parentRow) {
-	      var meal = target.id;
-	      var mealID = target.className.split(' ')[3];
-	      var food = target.className.split(' ')[1];
-	      return new Promise(function (res, rej) {
-	        Ajax.deleteMealFood(mealID, food).then(function (data) {
-	          if (data.message.includes("Successfully")) {
-	            LocalStorage.deleteMealFood(mealID, food, parentRow);
-	            res(meal);
-	          } else {
-	            rej("error");
-	          }
-	        });
-	      });
-	    }
-	  }]);
-
-	  return Meal;
-	}();
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var $ = __webpack_require__(6);
-	var HTMLRunner = __webpack_require__(16);
+	var HTMLRunner = __webpack_require__(11);
 	var mealRestrictions = {
 	  "1": 400,
 	  "2": 200,
@@ -11213,6 +11062,7 @@
 
 	      var remaining = total - consumed;
 	      HTMLRunner.appendRemainingCalories(remaining, row);
+	      HTMLRunner.appendRemainingCaloriesCSS(remaining, row);
 	    }
 	  }, {
 	    key: 'remainingIndivMealCalories',
@@ -11221,6 +11071,7 @@
 	      var totalAllowed = mealRestrictions[mealID];
 	      var remaining = totalAllowed - consumed;
 	      HTMLRunner.appendRemainingCalories(remaining, row);
+	      HTMLRunner.appendRemainingCaloriesCSS(remaining, row);
 	    }
 	  }]);
 
@@ -11228,7 +11079,7 @@
 	}();
 
 /***/ }),
-/* 16 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11327,13 +11178,22 @@
 	    value: function appendRemainingCalories(total, tableRow) {
 	      tableRow.html(total);
 	    }
+	  }, {
+	    key: 'appendRemainingCaloriesCSS',
+	    value: function appendRemainingCaloriesCSS(total, tableRow) {
+	      if (total < 0) {
+	        tableRow.css('backgroundColor', 'red');
+	      } else {
+	        tableRow.css('backgroundColor', 'green');
+	      }
+	    }
 	  }]);
 
 	  return HTMLRunner;
 	}();
 
 /***/ }),
-/* 17 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11343,7 +11203,344 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var $ = __webpack_require__(6);
-	var LocalStorage = __webpack_require__(15);
+	var Ajax = __webpack_require__(8);
+
+	module.exports = function () {
+	  function FoodHandlers() {
+	    _classCallCheck(this, FoodHandlers);
+	  }
+
+	  _createClass(FoodHandlers, null, [{
+	    key: 'populateFoodTable',
+	    value: function populateFoodTable(data) {
+	      data.forEach(function (object) {
+	        var row = "<tr class=food item-" + object.id + "><td data-id=" + object.id + " name=" + object.name.replace(/\s/g, '-') + " data-type='name' class='display' contenteditable='true'>" + object.name + "</td><td data-id=" + object.id + " name=" + object.calories + " data-type='calories' class='display' contenteditable='true'><span class='killer' contenteditable='false'><i class='fa fa-minus-circle' aria-hidden='true' style='font-size:24px'></i></span>" + object.calories + "</td></tr>";
+	        $(".food-body").prepend(row);
+	      });
+	    }
+	  }, {
+	    key: 'validateFoodInput',
+	    value: function validateFoodInput(name, calories) {
+	      if (name.length === 0) {
+	        event.preventDefault();
+	        $("p#submit-food-name").append("Please enter a food name.");
+	      } else if (calories.length === 0) {
+	        event.preventDefault();
+	        $("p#submit-calories").append("Please enter a calorie amount.");
+	      } else {
+	        $("p#submit-food-name").remove();
+	        $("p#submit-calories").remove();
+	        Ajax.postFoods(name, calories);
+	        $('input').val('').removeAttr('checked').removeAttr('selected');
+	      }
+	    }
+	  }, {
+	    key: 'editFood',
+	    value: function editFood(input, newFoodValue, currentFoodValue, objectId) {
+	      if (newFoodValue != currentFoodValue && event.target.attributes[2].value === "name") {
+	        var calories = event.target.nextElementSibling.textContent;
+	        var food = { food: {
+	            name: input,
+	            calories: calories
+	          }
+	        };
+	        Ajax.updateFood(food, objectId);
+	      } else {
+	        var name = event.target.previousElementSibling.textContent;
+	        var _food = { food: {
+	            name: name,
+	            calories: input
+	          }
+	        };
+	        Ajax.updateFood(_food, objectId);
+	      }
+	    }
+	  }, {
+	    key: 'filterFood',
+	    value: function filterFood(input, filter, table, tr, td, i) {
+	      for (i = 0; i < tr.length; i++) {
+	        td = tr[i].getElementsByTagName("td")[0];
+	        if (td) {
+	          if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+	            tr[i].style.display = "";
+	          } else {
+	            tr[i].style.display = "none";
+	          }
+	        }
+	      }
+	    }
+	  }]);
+
+	  return FoodHandlers;
+	}();
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var $ = __webpack_require__(6);
+	var $mealsTable = $('.meal-tables');
+	var $foodsTable = $('.food-meal-body');
+	var $consumedCals = $('.calories-consumed-val');
+	var $mealSelectionButton = $('.add-to-meal-button');
+	var $totalRemainingCals = $('.total-remaining-calories-val');
+	var $mealFoodCalorieHeader = $('.meal-food-table-calorie-header');
+	var $searchFood = $("#searchFood");
+
+	var Meal = __webpack_require__(14);
+	var Food = __webpack_require__(7);
+	var mealHandlers = __webpack_require__(15);
+
+	Meal.allMeals($mealsTable).then(function (data) {
+	  mealHandlers.allMeals($consumedCals);
+	});
+
+	Food.allSortedFood($foodsTable);
+
+	$($mealsTable).on('click', '.delete-button', function (event) {
+	  mealHandlers.deleteFood(event, $consumedCals);
+	});
+
+	$($consumedCals).on('click', function (event) {
+	  mealHandlers.updateCalories($consumedCals, $totalRemainingCals);
+	});
+
+	$($totalRemainingCals).on('click', function (event) {
+	  mealHandlers.updateRemainingCalories($totalRemainingCals, $consumedCals);
+	});
+
+	$($mealsTable).on('click', '.meal-calories', function (event) {
+	  mealHandlers.updateMealCalories(event);
+	});
+
+	$($mealsTable).on('click', '.meal-calories-remaining', function (event) {
+	  var meal = event.target.className.split('-')[0];
+	  var mealID = event.target.id;
+	  mealHandlers.updateRemainingMealCalories(meal, mealID);
+	});
+
+	$($mealSelectionButton).on('click', function (event) {
+	  mealHandlers.addFoodToMeal(event, $consumedCals);
+	});
+
+	$($mealFoodCalorieHeader).on('click', function (event) {
+	  $foodsTable.empty();
+	  mealHandlers.sortFoodCaloriesHeader(event, $foodsTable);
+	});
+
+	$($searchFood).keypress(function (event) {
+	  mealHandlers.searchFood();
+	});
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Ajax = __webpack_require__(8);
+	var Food = __webpack_require__(7);
+	var LocalStorage = __webpack_require__(10);
+
+	module.exports = function () {
+	  function Meal(meal) {
+	    _classCallCheck(this, Meal);
+
+	    this.id = meal.id;
+	    this.name = meal.name;
+	    this.food = Food.getFood(meal.foods);
+	  }
+
+	  _createClass(Meal, null, [{
+	    key: 'addFoodToMeal',
+	    value: function addFoodToMeal(mealID, foodIDs) {
+	      return Promise.all(foodIDs.map(function (foodID) {
+	        Ajax.addFoodToMeal(mealID, foodID);
+	      })).then(function (data) {
+	        LocalStorage.addFoodToMeal(mealID, foodIDs);
+	      });
+	    }
+	  }, {
+	    key: 'allMeals',
+	    value: function allMeals(mealsTable) {
+	      return Ajax.getAllMeals().then(function (data) {
+	        var allMeals = data.map(function (k, v) {
+	          return new Meal(k);
+	        });
+	        Meal.sort(allMeals);
+	        LocalStorage.saveMealData(allMeals, mealsTable);
+	        return allMeals;
+	      });
+	    }
+	  }, {
+	    key: 'sort',
+	    value: function sort(meals) {
+	      meals.sort(function (a, b) {
+	        b.id - a.id;
+	      });
+	    }
+	  }, {
+	    key: 'deleteMealFood',
+	    value: function deleteMealFood(target, parentRow) {
+	      var meal = target.id;
+	      var mealID = target.className.split(' ')[6];
+	      var food = target.className.split(' ')[4];
+	      return new Promise(function (res, rej) {
+	        Ajax.deleteMealFood(mealID, food).then(function (data) {
+	          if (data.message.includes("Successfully")) {
+	            LocalStorage.deleteMealFood(mealID, food, parentRow);
+	            res(meal);
+	          } else {
+	            rej("error");
+	          }
+	        });
+	      });
+	    }
+	  }]);
+
+	  return Meal;
+	}();
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var $ = __webpack_require__(6);
+	var Meal = __webpack_require__(14);
+	var Food = __webpack_require__(7);
+	var HTMLRunner = __webpack_require__(11);
+	var Calories = __webpack_require__(16);
+	var LocalStorage = __webpack_require__(10);
+
+	var sort = "id";
+
+	module.exports = function () {
+	  function MealHandlers() {
+	    _classCallCheck(this, MealHandlers);
+	  }
+
+	  _createClass(MealHandlers, null, [{
+	    key: 'deleteFood',
+	    value: function deleteFood(event, consumedCals) {
+	      var parentRow = $(event.target).parents().eq(2);
+	      Meal.deleteMealFood(event.target, parentRow).then(function (meal) {
+	        consumedCals.trigger('click');
+	        HTMLRunner.eventCalTrigger(meal);
+	      });
+	    }
+	  }, {
+	    key: 'allMeals',
+	    value: function allMeals(consumedCals) {
+	      consumedCals.trigger('click');
+	    }
+	  }, {
+	    key: 'updateCalories',
+	    value: function updateCalories(consumedCals, totalRemainingCals) {
+	      Calories.updateCalories(consumedCals).then(function (data) {
+	        totalRemainingCals.trigger('click');
+	      });
+	    }
+	  }, {
+	    key: 'updateRemainingCalories',
+	    value: function updateRemainingCalories(totalRemainingCals, consumedCals) {
+	      Calories.updateRemainingCalories(totalRemainingCals, consumedCals.html());
+	    }
+	  }, {
+	    key: 'updateMealCalories',
+	    value: function updateMealCalories(event) {
+	      var meal = event.target.className.split('-')[0];
+	      var mealID = event.target.id;
+	      Calories.updateMealCalories($('.' + meal + '-calories'), mealID, meal).then(function (data) {
+	        HTMLRunner.eventRemainingTrigger(meal);
+	      });
+	    }
+	  }, {
+	    key: 'updateRemainingMealCalories',
+	    value: function updateRemainingMealCalories(meal, mealID) {
+	      Calories.updateRemainingMealCalories($('.' + meal + '-remaining-calories'), mealID);
+	    }
+	  }, {
+	    key: 'addFoodToMeal',
+	    value: function addFoodToMeal(event, consumedCals) {
+	      var foodIDs = [];
+	      var mealID = event.target.id;
+	      var meal = event.target.innerText;
+	      $('.food-meal-body input:checkbox:checked').map(function () {
+	        foodIDs.push($(this).attr("id").split(" ")[1]);
+	        $(this).prop('checked', false);
+	      });
+	      Meal.addFoodToMeal(mealID, foodIDs).then(function (data) {
+	        HTMLRunner.eventCalTrigger(meal);
+	        $consumedCals.trigger('click');
+	      });
+	    }
+	  }, {
+	    key: 'sortFoodCaloriesHeader',
+	    value: function sortFoodCaloriesHeader(event, foodsTable) {
+	      if (sort == "id") {
+	        sort = "top";
+	        Food.sortedCaloriesFood(foodsTable);
+	      } else if (sort == "top") {
+	        sort = "bottom";
+	        Food.reverseSortCaloriesFood(foodsTable);
+	      } else if (sort == "bottom") {
+	        sort = "id";
+	        Food.allSortedFood(foodsTable);
+	      }
+	    }
+	  }, {
+	    key: 'searchFood',
+	    value: function searchFood() {
+	      var input = void 0,
+	          filter = void 0,
+	          table = void 0,
+	          tr = void 0,
+	          td = void 0,
+	          i = void 0;
+	      input = document.getElementById("searchFood");
+	      filter = input.value.toUpperCase();
+	      table = document.getElementById("foodTable");
+	      tr = table.getElementsByTagName("tr");
+	      for (i = 0; i < tr.length; i++) {
+	        td = tr[i].getElementsByTagName("td")[1];
+	        if (td) {
+	          if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+	            tr[i].style.display = "";
+	          } else {
+	            tr[i].style.display = "none";
+	          }
+	        }
+	      }
+	    }
+	  }]);
+
+	  return MealHandlers;
+	}();
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var $ = __webpack_require__(6);
+	var LocalStorage = __webpack_require__(10);
 
 	module.exports = function () {
 	  function Calories() {
