@@ -7,6 +7,11 @@ div.foods {
   width: 300px;
 }
 
+div.foods-xl {
+  font: 100% $font-stack;
+  width: 350px;
+}
+
 div.meal-tables {
   font: 100% $font-stack;
   width: 300px;
@@ -83,6 +88,11 @@ th {
   background-color: #dddddd;
 }
 
+td.delete-button {
+  border: none;
+    color: red;
+}
+
 span.killer {
     float: right;
     margin-right: -2.4em;
@@ -115,4 +125,8 @@ p.food-table-header {
   font-weight: bold;
   margin-bottom: 12px;
   margin-top: 1px;
+}
+
+.add-to-meal-checkbox {
+  margin-right: 20px;
 }
