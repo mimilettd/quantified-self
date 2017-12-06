@@ -89,7 +89,7 @@
 
 
 	// module
-	exports.push([module.id, "div.foods {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\ndiv.meal-tables {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\n.foods input {\n  width: 100%;\n  height: 22px;\n  border-style: solid;\n  border-width: 1.5px; }\n\nh1.foods {\n  font-size: 1.5em;\n  font-weight: 350; }\n\np.food {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 2px; }\n\np.submit-food {\n  font-size: .8em;\n  color: red;\n  margin-top: 2px;\n  text-align: right; }\n\np.return {\n  font-weight: bold;\n  color: #000; }\n\n.button {\n  background-color: #56CCF2;\n  color: black;\n  border-style: solid;\n  border-width: 1.5px;\n  border-color: black;\n  border-radius: 25px;\n  margin-bottom: 15px;\n  padding: 1em 18px;\n  text-align: center;\n  cursor: pointer;\n  font-size: 1em;\n  font-weight: bold;\n  line-height: 1px;\n  width: 140px; }\n\ntable {\n  font-family: arial, sans-serif;\n  border-collapse: collapse;\n  width: 100%; }\n\ntd, th {\n  border: 2px solid;\n  text-align: left;\n  padding: 8px; }\n\nth {\n  background-color: #dddddd; }\n\nspan.killer {\n  float: right;\n  margin-right: -2.4em;\n  color: red; }\n\n#food_form {\n  display: inline !important; }\n\n.fa-arrow-left {\n  margin-right: 4px;\n  color: #000; }\n\ndiv.column {\n  float: left;\n  width: 43%;\n  padding: 10px; }\n\ndiv.row:after {\n  content: \"\";\n  display: table;\n  clear: both; }\n\np.food-table-header {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 12px;\n  margin-top: 1px; }\n\n.add-to-meal-checkbox {\n  margin-right: 20px; }\n", ""]);
+	exports.push([module.id, "div.foods {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\ndiv.foods-xl {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 350px; }\n\ndiv.meal-tables {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\n.foods input {\n  width: 100%;\n  height: 22px;\n  border-style: solid;\n  border-width: 1.5px; }\n\nh1.foods {\n  font-size: 1.5em;\n  font-weight: 350; }\n\np.food {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 2px; }\n\np.submit-food {\n  font-size: .8em;\n  color: red;\n  margin-top: 2px;\n  text-align: right; }\n\np.return {\n  font-weight: bold;\n  color: #000; }\n\n.button {\n  background-color: #56CCF2;\n  color: black;\n  border-style: solid;\n  border-width: 1.5px;\n  border-color: black;\n  border-radius: 25px;\n  margin-bottom: 15px;\n  padding: 1em 18px;\n  text-align: center;\n  cursor: pointer;\n  font-size: 1em;\n  font-weight: bold;\n  line-height: 1px;\n  width: 140px; }\n\ntable {\n  font-family: arial, sans-serif;\n  border-collapse: collapse;\n  width: 100%; }\n\ntd, th {\n  border: 2px solid;\n  text-align: left;\n  padding: 8px; }\n\nth {\n  background-color: #dddddd; }\n\ntd.delete-button {\n  border: none;\n  color: red; }\n\nspan.killer {\n  float: right;\n  margin-right: -2.4em;\n  color: red; }\n\n#food_form {\n  display: inline !important; }\n\n.fa-arrow-left {\n  margin-right: 4px;\n  color: #000; }\n\ndiv.column {\n  float: left;\n  width: 43%;\n  padding: 10px; }\n\ndiv.row:after {\n  content: \"\";\n  display: table;\n  clear: both; }\n\np.food-table-header {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 12px;\n  margin-top: 1px; }\n\n.add-to-meal-checkbox {\n  margin-right: 20px; }\n", ""]);
 
 	// exports
 
@@ -419,26 +419,41 @@
 	  $("#food_form").submit(function (event) {
 	    var name = $("input[name=name]").val();
 	    var calories = $("input[name=calories]").val();
-	    return FoodHandler.validateFoodInput(name, calories);
+	    var thisObject = event;
+	    return FoodHandler.validateFoodInput(name, calories, thisObject);
 	  });
 	});
 
 	// event listener for deleting food
 
-	$("#food-list").click(function (event) {
-	  var objectId = event.target.parentElement.parentElement.dataset.id;
-	  var row = event.target.parentElement.parentElement.parentElement;
-	  Ajax.deleteFood(objectId, row);
+
+	$(document).ready(function () {
+	  $("#food-list").click(function (event) {
+	    if (event.target.className === "delete-button" || event.target.parentElement.className === "delete-button") {
+	      var objectId = event.target.parentElement.parentElement.dataset.id;
+	      sessionStorage.clear();
+	      sessionStorage.setItem('objectId', objectId);
+	      Ajax.deleteFood(objectId).then(function () {
+	        $("#food-list tr").remove();
+	        FoodHandler.populateFoodTable(JSON.parse(sessionStorage.getItem('newTable')));
+	      });
+	    } else {
+	      event.stopPropagation();
+	    }
+	  });
 	});
 
 	// event listener for editing food
 
-	$("#food-list").focusout(function (event) {
-	  var input = event.target.textContent;
-	  var newFoodValue = event.target.textContent.replace(/\s/g, '-');
-	  var currentFoodValue = event.target.attributes[1].value;
-	  var objectId = event.target.attributes[0].value;
-	  FoodHandler.editFood(input, newFoodValue, currentFoodValue, objectId);
+	$(document).ready(function () {
+	  $("#food-list").focusout(function (event) {
+	    var input = event.target.textContent;
+	    var newFoodValue = event.target.textContent.replace(/\s/g, '-');
+	    var currentFoodValue = event.target.attributes[1].value;
+	    var objectId = event.target.parentElement.dataset.id;
+	    var thisObject = event;
+	    FoodHandler.editFood(input, newFoodValue, currentFoodValue, objectId, thisObject);
+	  });
 	});
 
 	// event listener for listing all food
@@ -10904,14 +10919,16 @@
 	    }
 	  }, {
 	    key: "deleteFood",
-	    value: function deleteFood(id, row) {
+	    value: function deleteFood(id) {
 	      $.ajax({
 	        url: apiURL + "/api/v1/foods/" + id,
-	        type: 'DELETE',
-	        success: function success(callback) {
-	          alert('Food successfully deleted.');
-	          row.remove();
-	        }
+	        type: 'DELETE'
+	      });
+	      return this.getAllFoods().done(function (event) {
+	        var newTable = event.filter(function (e) {
+	          return e.id != sessionStorage.getItem('objectId');
+	        });
+	        sessionStorage.setItem('newTable', JSON.stringify(newTable));
 	      });
 	    }
 	  }]);
@@ -11214,19 +11231,19 @@
 	    key: 'populateFoodTable',
 	    value: function populateFoodTable(data) {
 	      data.forEach(function (object) {
-	        var row = "<tr class=food item-" + object.id + "><td data-id=" + object.id + " name=" + object.name.replace(/\s/g, '-') + " data-type='name' class='display' contenteditable='true'>" + object.name + "</td><td data-id=" + object.id + " name=" + object.calories + " data-type='calories' class='display' contenteditable='true'><span class='killer' contenteditable='false'><i class='fa fa-minus-circle' aria-hidden='true' style='font-size:24px'></i></span>" + object.calories + "</td></tr>";
+	        var row = "<tr class=food data-id=" + object.id + "><td name=" + object.name.replace(/\s/g, '-') + " data-type='name' class='display' contenteditable='true'>" + object.name + "</td><td name=" + object.calories + " data-type='calories' class='display' contenteditable='true'>" + object.calories + "</td><td class='delete-button'><i class='fa fa-minus-circle' aria-hidden='true' style='font-size:24px'></i></td></tr>";
 	        $(".food-body").prepend(row);
 	      });
 	    }
 	  }, {
 	    key: 'validateFoodInput',
-	    value: function validateFoodInput(name, calories) {
-	      if (name.length === 0) {
-	        event.preventDefault();
-	        $("p#submit-food-name").append("Please enter a food name.");
-	      } else if (calories.length === 0) {
+	    value: function validateFoodInput(name, calories, event) {
+	      if (isNaN(calories) || calories.length === 0) {
 	        event.preventDefault();
 	        $("p#submit-calories").append("Please enter a calorie amount.");
+	      } else if (name.length === 0) {
+	        event.preventDefault();
+	        $("p#submit-food-name").append("Please enter a food name.");
 	      } else {
 	        $("p#submit-food-name").remove();
 	        $("p#submit-calories").remove();
@@ -11236,24 +11253,19 @@
 	    }
 	  }, {
 	    key: 'editFood',
-	    value: function editFood(input, newFoodValue, currentFoodValue, objectId) {
-	      if (newFoodValue != currentFoodValue && event.target.attributes[2].value === "name") {
-	        var calories = event.target.nextElementSibling.textContent;
-	        var food = { food: {
-	            name: input,
-	            calories: calories
-	          }
-	        };
-	        Ajax.updateFood(food, objectId);
+	    value: function editFood(input, newFoodValue, currentFoodValue, objectId, thisObject) {
+	      var calories = void 0,
+	          name = void 0;
+	      if (newFoodValue != currentFoodValue && thisObject.target.attributes[1].value === "name") {
+	        name = input;
+	        calories = thisObject.target.nextElementSibling.textContent;
 	      } else {
-	        var name = event.target.previousElementSibling.textContent;
-	        var _food = { food: {
-	            name: name,
-	            calories: input
-	          }
-	        };
-	        Ajax.updateFood(_food, objectId);
+	        name = thisObject.target.previousElementSibling.textContent;
+	        calories = input;
 	      }
+
+	      var food = { food: { name: name, calories: calories } };
+	      Ajax.updateFood(food, objectId);
 	    }
 	  }, {
 	    key: 'filterFood',
