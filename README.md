@@ -2,6 +2,8 @@
 
 A calorie tracker project that is built with jQuery and an Express backend. 
 
+Demo the application: <a href="https://mimilettd.github.io/quantified-self/index.html">https://mimilettd.github.io/quantified-self/index.html</a>
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
@@ -51,7 +53,7 @@ To view the application, visit `http://localhost:8080`.
 
 ## Contributing
 
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
+Please read <a href="https://github.com/mimilettd/quantified-self/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
 
@@ -60,5 +62,5 @@ Please read CONTRIBUTING.md for details on our code of conduct, and the process 
 
 ## Acknowledgments
 
-  * Shout out to <a href="https://github.com/laurenfazah"><b>Lauren Fazah</b></a> for being the Technical Lead for this project.
+  * Shout out to <a href="https://github.com/kat3kasper"><b>Katelyn Kasperowicz</b></a> for being the Technical Lead for this project.
   * Special thanks to the <a href="https://www.turing.io/"><b>Turing School of Software & Design</b></a> for providing us the tools to become the developers that we are today. 
