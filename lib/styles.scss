@@ -56,6 +56,15 @@ p.return {
   color: #000;
 }
 
+p.meal-table-title {
+  font-size: 1.5em;
+  font-weight: 350;
+}
+
+p.totals-table-title {
+  font-size: 1.5em;
+  font-weight: 350;
+}
 // buttons
 
 .button {
@@ -89,6 +98,11 @@ td, th {
 
 th {
   background-color: #dddddd;
+}
+
+.grey-bold {
+  background-color: #dddddd;
+  font-weight: bold;
 }
 
 td.delete-button {
@@ -132,4 +146,31 @@ p.food-table-header {
 
 .add-to-meal-checkbox {
   margin-right: 20px;
+}
+
+// grid system
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.one {
+  grid-column: 1;
+  grid-row: 1;
+  margin-left: 350px;
+}
+
+.two {
+  grid-column: 2;
+  grid-row: 1;
+  margin-left: 100px;
+}
+
+.food-one {
+  grid-column: 1;
+  grid-row: 1;
+  margin-left: 10px;
 }
