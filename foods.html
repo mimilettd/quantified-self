@@ -4,42 +4,53 @@
   <meta charset="utf-8">
   <title>Quantified Self - Manage Foods</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      body { 
+        background-image: url("https://i.imgur.com/0aDOBZ0.jpg");
+        background-size: 1450px auto;
+        background-repeat: no-repeat;
+      }
+    </style>
 </head>
 <body>
+  <div class="wrapper">
+    <div class="food-one">
 
-  <div class="foods">
-  <p class="return"><a href="index.html"><i class="fa fa-arrow-left" aria-hidden="true"></i>Return to Index</a></p>
-  </div>
+      <div class="foods">
+      <p class="return"><a href="index.html"><i class="fa fa-arrow-left" aria-hidden="true"></i>Return to Index</a></p>
+      </div>
 
-  <div class="foods">
-    <form id="food_form">
-      <h1 class="foods">Manage Foods</h1>
-      <p class="food">Name:</p>
-      <input type="text" name="name">
-      <p class="submit-food" id="submit-food-name"></p>
-      <p class="food">Calories:</p>
-      <input type="text" size="40" name="calories">
-      <p class="submit-food" id="submit-calories"></p>
-      <button type="submit" form="food_form" value="Submit" class="button" style="float: right;margin-top: 15px;">Add Food</button>
-    </form>
-  </div>
+      <div class="foods">
+        <form id="food_form">
+          <h1 class="foods">Manage Foods</h1>
+          <p class="food">Name:</p>
+          <input type="text" name="name">
+          <p class="submit-food" id="submit-food-name"></p>
+          <p class="food">Calories:</p>
+          <input type="text" size="40" name="calories">
+          <p class="submit-food" id="submit-calories"></p>
+          <button type="submit" form="food_form" value="Submit" class="button" style="float: right;margin-top: 15px;">Add Food</button>
+        </form>
+      </div>
 
-  <div class="foods" style="padding-top:25px;padding-bottom:25px;margin-top:35px;">
-    <p class="food">Filter by Name</p>
-    <input id="filterFood" type="text" size="40" name="filter-food">
-  </div>
+      <div class="foods" style="padding-top:25px;padding-bottom:25px;margin-top:35px;">
+        <p class="food">Filter by Name</p>
+        <input id="filterFood" type="text" size="40" name="filter-food">
+      </div>
 
-  <div class="foods-xl" id="table">
-    <table id="foodTable">
-      <thead>
-      <tr>
-        <th>Food</th>
-        <th>Calories</th>
-      </tr>
-      </thead>
-      <tbody class="food-body" id="food-list">
-      </tbody>
-    </table>
+      <div class="foods-xl" id="table">
+        <table id="foodTable">
+          <thead>
+          <tr>
+            <th>Food</th>
+            <th>Calories</th>
+          </tr>
+          </thead>
+          <tbody class="food-body" id="food-list">
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <script src="main.bundle.js"></script>
