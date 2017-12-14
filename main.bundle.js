@@ -89,7 +89,7 @@
 
 
 	// module
-	exports.push([module.id, "div.foods {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\ndiv.foods-xl {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 350px !important; }\n\ndiv.meal-tables {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\n.foods input {\n  width: 100%;\n  height: 22px;\n  border-style: solid;\n  border-width: 1.5px; }\n\ninput:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0px 1000px white inset; }\n\nh1.foods {\n  font-size: 1.5em;\n  font-weight: 350; }\n\np.food {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 2px; }\n\np.submit-food {\n  font-size: .8em;\n  color: red;\n  margin-top: 2px;\n  text-align: right; }\n\np.return {\n  font-weight: bold;\n  color: #000; }\n\n.button {\n  background-color: #56CCF2;\n  color: black;\n  border-style: solid;\n  border-width: 1.5px;\n  border-color: black;\n  border-radius: 25px;\n  margin-bottom: 15px;\n  padding: 1em 18px;\n  text-align: center;\n  cursor: pointer;\n  font-size: 1em;\n  font-weight: bold;\n  line-height: 1px;\n  width: 140px; }\n\ntable {\n  font-family: arial, sans-serif;\n  border-collapse: collapse;\n  width: 100%; }\n\ntd, th {\n  border: 2px solid;\n  text-align: left;\n  padding: 8px; }\n\nth {\n  background-color: #dddddd; }\n\ntd.delete-button {\n  border: none;\n  color: red; }\n\nspan.killer {\n  float: right;\n  margin-right: -2.4em;\n  color: red; }\n\n#food_form {\n  display: inline !important; }\n\n.fa-arrow-left {\n  margin-right: 4px;\n  color: #000; }\n\ndiv.column {\n  float: left;\n  width: 43%;\n  padding: 10px; }\n\ndiv.row:after {\n  content: \"\";\n  display: table;\n  clear: both; }\n\np.food-table-header {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 12px;\n  margin-top: 1px; }\n\n.add-to-meal-checkbox {\n  margin-right: 20px; }\n", ""]);
+	exports.push([module.id, "div.foods {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\ndiv.foods-xl {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 350px !important; }\n\ndiv.meal-tables {\n  font: 100% Arial, Helvetica, sans-serif;\n  width: 300px; }\n\n.foods input {\n  width: 100%;\n  height: 22px;\n  border-style: solid;\n  border-width: 1.5px; }\n\ninput:-webkit-autofill {\n  -webkit-box-shadow: 0 0 0px 1000px white inset; }\n\nh1.foods {\n  font-size: 1.5em;\n  font-weight: 350; }\n\np.food {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 2px; }\n\np.submit-food {\n  font-size: .8em;\n  color: red;\n  margin-top: 2px;\n  text-align: right; }\n\np.return {\n  font-weight: bold;\n  color: #000; }\n\np.meal-table-title {\n  font-size: 1.5em;\n  font-weight: 350; }\n\np.totals-table-title {\n  font-size: 1.5em;\n  font-weight: 350; }\n\n.button {\n  background-color: #56CCF2;\n  color: black;\n  border-style: solid;\n  border-width: 1.5px;\n  border-color: black;\n  border-radius: 25px;\n  margin-bottom: 15px;\n  padding: 1em 18px;\n  text-align: center;\n  cursor: pointer;\n  font-size: 1em;\n  font-weight: bold;\n  line-height: 1px;\n  width: 140px; }\n\ntable {\n  font-family: arial, sans-serif;\n  border-collapse: collapse;\n  width: 100%; }\n\ntd, th {\n  border: 2px solid;\n  text-align: left;\n  padding: 8px; }\n\nth {\n  background-color: #dddddd; }\n\n.grey-bold {\n  background-color: #dddddd;\n  font-weight: bold; }\n\ntd.delete-button {\n  border: none;\n  color: red; }\n\nspan.killer {\n  float: right;\n  margin-right: -2.4em;\n  color: red; }\n\n#food_form {\n  display: inline !important; }\n\n.fa-arrow-left {\n  margin-right: 4px;\n  color: #000; }\n\ndiv.column {\n  float: left;\n  width: 43%;\n  padding: 10px; }\n\ndiv.row:after {\n  content: \"\";\n  display: table;\n  clear: both; }\n\np.food-table-header {\n  font-size: 1em;\n  font-weight: bold;\n  margin-bottom: 12px;\n  margin-top: 1px; }\n\n.add-to-meal-checkbox {\n  margin-right: 20px; }\n\n.wrapper {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  grid-gap: 10px;\n  grid-auto-rows: minmax(100px, auto); }\n\n.one {\n  grid-column: 1;\n  grid-row: 1;\n  margin-left: 350px; }\n\n.two {\n  grid-column: 2;\n  grid-row: 1;\n  margin-left: 100px; }\n\n.food-one {\n  grid-column: 1;\n  grid-row: 1;\n  margin-left: 10px; }\n", ""]);
 
 	// exports
 
@@ -10849,7 +10849,7 @@
 
 	var $ = __webpack_require__(6);
 	var HTMLHelper = __webpack_require__(9);
-	var apiURL = "https://q-self-api-mlwd.herokuapp.com";
+	var apiURL = "https://quantified-self-api-mlwd.herokuapp.com";
 
 	module.exports = function () {
 	  function Ajax() {
@@ -10905,7 +10905,7 @@
 	    value: function updateFood(food, id) {
 	      $.ajax({
 	        url: apiURL + '/api/v1/foods/' + id,
-	        type: 'PUT',
+	        type: 'PATCH',
 	        data: food,
 	        success: function success(data) {
 	          console.log('Food successfully updated.');
@@ -10956,7 +10956,7 @@
 	  }, {
 	    key: 'newTableDiv',
 	    value: function newTableDiv(data) {
-	      return '\n      <div class=\'' + data.name + ' meals-table\'>\n      <tr>\n        <table class=\'' + data.name + '-table meal-table\'>\n          <thead>\n            <p class=\'meal-table-title\'><strong>' + data.name + '</strong></p>\n              <tr>\n                <th class=\'meal-table-header\'>Name</th>\n                <th class=\'meal-table-header\'>Calories</th>\n              </tr>\n            </thead class=\'' + data.name + '-thead meal-table-head\'>\n          <tfoot class=\'' + data.name + '\'>\n          </tfoot>\n          <tbody class=\'' + data.name + '-tbody ' + data.id + ' meal-table-body\'>\n          </tbody>\n          <tfoot class=\'' + data.name + '-tfoot meal-table-footer\'\n          </tfoot>\n        </table>\n      </tr>\n    ';
+	      return '\n      <div class=\'' + data.name + ' meals-table\'>\n      <tr>\n        <table class=\'' + data.name + '-table meal-table\'>\n          <thead>\n            <p class=\'meal-table-title\'>' + data.name + '</p>\n              <tr>\n                <th class=\'meal-table-header\'>Name</th>\n                <th class=\'meal-table-header\'>Calories</th>\n              </tr>\n            </thead class=\'' + data.name + '-thead meal-table-head\'>\n          <tfoot class=\'' + data.name + '\'>\n          </tfoot>\n          <tbody class=\'' + data.name + '-tbody ' + data.id + ' meal-table-body\'>\n          </tbody>\n          <tfoot class=\'' + data.name + '-tfoot meal-table-footer\'\n          </tfoot>\n        </table>\n      </tr>\n    ';
 	    }
 	  }, {
 	    key: 'newTableRow',
@@ -10966,7 +10966,7 @@
 	  }, {
 	    key: 'totalMealCalories',
 	    value: function totalMealCalories(val) {
-	      return '\n      <tr class=\'table-row meal-calories\'>\n        <td class=\'' + val.name + '-calories-header meal-cals-header\' id=\'' + val.id + '\'>Total Calories</td>\n        <td class=\'' + val.name + '-calories meal-cals-val total-meal-calories\' id=\'' + val.id + '\'>0</td>\n      </tr>\n      <tr class=\'table-row meal-calories-remaining\'>\n        <td class=\'' + val.name + '-remaing-calories-header meal-cals-header\' id=\'' + val.id + '\'>Remaining Calories</td>\n        <td class=\'' + val.name + '-remaining-calories meal-cals-val rem-meal-cals\' id=\'' + val.id + '\'>0</td>\n      </tr>';
+	      return '\n      <tr class=\'table-row meal-calories\'>\n        <td class=\'' + val.name + '-calories-header meal-cals-header grey-bold\' id=\'' + val.id + '\'>Total Calories</td>\n        <td class=\'' + val.name + '-calories meal-cals-val total-meal-calories grey-bold\' id=\'' + val.id + '\'>0</td>\n      </tr>\n      <tr class=\'table-row meal-calories-remaining\'>\n        <td class=\'' + val.name + '-remaing-calories-header meal-cals-header grey-bold\' id=\'' + val.id + '\'>Remaining Calories</td>\n        <td class=\'' + val.name + '-remaining-calories meal-cals-val rem-meal-cals grey-bold\' id=\'' + val.id + '\'>0</td>\n      </tr>';
 	    }
 	  }, {
 	    key: 'appendFoodToTable',
@@ -11453,7 +11453,7 @@
 	      var food = target.className.split(' ')[4];
 	      return new Promise(function (res, rej) {
 	        Ajax.deleteMealFood(mealID, food).then(function (data) {
-	          if (data.message.includes("Successfully")) {
+	          if (data.includes("Successfully")) {
 	            LocalStorage.deleteMealFood(mealID, food, parentRow);
 	            res(meal);
 	          } else {
@@ -11544,7 +11544,7 @@
 	      });
 	      Meal.addFoodToMeal(mealID, foodIDs).then(function (data) {
 	        HTMLRunner.eventCalTrigger(meal);
-	        $consumedCals.trigger('click');
+	        consumedCals.trigger('click');
 	      });
 	    }
 	  }, {
