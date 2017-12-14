@@ -1,5 +1,10 @@
 $font-stack:    Arial, Helvetica, sans-serif;
 
+body {
+  padding: 30px;
+  background-color: #fcfcfc;
+}
+
 // divs
 
 div.foods {
@@ -160,17 +165,23 @@ p.food-table-header {
 .one {
   grid-column: 1;
   grid-row: 1;
-  margin-left: 350px;
 }
 
 .two {
   grid-column: 2;
   grid-row: 1;
-  margin-left: 100px;
+  margin-left: 75px;
 }
 
 .food-one {
   grid-column: 1;
   grid-row: 1;
   margin-left: 10px;
+}
+
+.center-div
+{
+  margin: 0 auto;
+  max-width: 700px;
+  height: 100px;
 }
