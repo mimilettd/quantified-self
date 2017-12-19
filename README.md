@@ -29,11 +29,12 @@ $ cd quantified-self
 npm install
 ```
 
-3. Clone the backend app and change into the `quantified-self-api` directory:
+3. Clone the <a href="https://github.com/mimilettd/quantified_self_api_mlwd
+>backend app</a> and change into the `quantified-self-api` directory:
 
 ```
-$ git clone https://github.com/swdonovan/quantified-self-api.git
-$ cd quantified-self-api
+$ git clone https://github.com/mimilettd/quantified_self_api_mlwd
+$ cd quantified_self_api_mlwd
 ```
 
 Run the following commands in your terminal to start the server:
