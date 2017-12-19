@@ -29,8 +29,7 @@ $ cd quantified-self
 npm install
 ```
 
-3. Clone the <a href="https://github.com/mimilettd/quantified_self_api_mlwd"
->backend app</a> and change into the `quantified-self-api` directory:
+3. Clone the <a href="https://github.com/mimilettd/quantified_self_api_mlwd">backend app</a> and change into the `quantified-self-api` directory:
 
 ```
 $ git clone https://github.com/mimilettd/quantified_self_api_mlwd
